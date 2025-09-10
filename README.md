@@ -1,0 +1,1 @@
+Source code for NoteStack project. A django project to sharpen my skills in django, RESTApi and other tools.
