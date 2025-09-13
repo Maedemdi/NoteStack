@@ -1,16 +1,18 @@
 from rest_framework import serializers
 from .models import NoteStackUser, Note, Tag
 
-"""Serializing data, one for each associated model"""
+"""Serializing data"""
 
 
 class NoteSerializer(serializers.ModelSerializer):
+    """Enables serializing and submitting notes"""
     class Meta:
         model = Note
         fields = '__all__'
 
 
 class SignUpSerializer(serializers.ModelSerializer):
+    """Enables signing the user up"""
     password = serializers.CharField(write_only=True, min_length=8)
 
     class Meta:

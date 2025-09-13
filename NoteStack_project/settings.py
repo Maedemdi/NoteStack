@@ -144,3 +144,4 @@ REST_FRAMEWORK = {
 
 
 AUTH_USER_MODEL = "Notes_app.NoteStackUser"  
+

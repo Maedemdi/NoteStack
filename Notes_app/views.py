@@ -2,11 +2,11 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import Note, NoteStackUser
 from .serializers import NoteSerializer, SignUpSerializer
@@ -20,6 +20,8 @@ class NoteViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, SearchFilter)
     filterset_fields = ('tags',)
     search_fields = ('title','text','tags__caption', 'user__username', 'user__first_name', 'user__last_name')
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    
     
 
 class SignupView(APIView):

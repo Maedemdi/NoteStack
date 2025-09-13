@@ -1,11 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 """ 3 models: Note, Tag, User """
 
 
 class NoteStackUserManager(BaseUserManager):
-    """Manager required for authentication"""
+    """Manager required for user creation and authentication"""
     
     def create_user(self, username, first_name, last_name, email, password=None):
         if not username:
@@ -30,14 +29,14 @@ class NoteStackUserManager(BaseUserManager):
             email=email,
             password=password,
         )
-        user.is_staff = True
         user.is_superuser = True
+        user.is_staff = True
         user.save(using=self._db)
         return user
 
 
 
-class NoteStackUser(AbstractBaseUser):
+class NoteStackUser(AbstractBaseUser, PermissionsMixin):
     """User model"""
     username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=100)
