@@ -6,7 +6,7 @@ from .models import NoteStackUser, Note, Tag
 
 class NoteAdmin(admin.ModelAdmin):
     """Customized display of notes in admin panel"""
-    list_display = ('text', 'user__username')
+    list_display = ('title', 'user__username')
 
 admin.site.register(Note, NoteAdmin)
 admin.site.register(Tag)

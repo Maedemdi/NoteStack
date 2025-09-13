@@ -3,12 +3,6 @@ from .models import NoteStackUser, Note, Tag
 
 """Serializing data, one for each associated model"""
 
-class NoteStackUserSeriazlizer(serializers.ModelSerializer):
-    class Meta:
-        model = NoteStackUser
-        fields = '__all__'
-        exclude = ('password')
-
 
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,7 +10,31 @@ class NoteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TagSerializer(serializers.ModelSerializer):
+class SignUpSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=8)
+
     class Meta:
-        model = Tag
-        fields = '__all__'
+        model = NoteStackUser
+        fields = ['username', 'first_name', 'last_name', 'email', 'password']
+
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = NoteStackUser.objects.create_user(
+            password=password,
+            **validated_data
+        )
+        return user
+
+
+
+# class NoteStackUserSeriazlizer(serializers.ModelSerializer):
+#     class Meta:
+#         model = NoteStackUser
+#         fields = '__all__'
+
+
+# class TagSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Tag
+#         fields = '__all__'
