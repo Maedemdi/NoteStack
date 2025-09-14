@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import Note, NoteStackUser
 from .serializers import NoteSerializer, SignUpSerializer
+from .permissions import UpdateOwnNote
 
 """Views to enable displaying the notes. With tag-filtering and search features"""
 
@@ -20,7 +21,7 @@ class NoteViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, SearchFilter)
     filterset_fields = ('tags',)
     search_fields = ('title','text','tags__caption', 'user__username', 'user__first_name', 'user__last_name')
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly,UpdateOwnNote)
     
     
 
