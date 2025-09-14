@@ -6,9 +6,15 @@ from .models import NoteStackUser, Note, Tag
 
 class NoteSerializer(serializers.ModelSerializer):
     """Enables serializing and submitting notes"""
+    user = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    tags = serializers.SlugRelatedField(many=True,
+                                        slug_field="caption",
+                                        queryset=Tag.objects.all())
+
     class Meta:
         model = Note
-        fields = '__all__'
+        fields = ('id', 'user', 'title', 'text', 'tags')
+        read_only_fields = ('user',)
 
 
 class SignUpSerializer(serializers.ModelSerializer):

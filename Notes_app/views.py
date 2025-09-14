@@ -23,6 +23,8 @@ class NoteViewSet(viewsets.ModelViewSet):
     search_fields = ('title','text','tags__caption', 'user__username', 'user__first_name', 'user__last_name')
     permission_classes = (IsAuthenticatedOrReadOnly,UpdateOwnNote)
     
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
     
 
 class SignupView(APIView):
