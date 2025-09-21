@@ -3,6 +3,7 @@ from rest_framework import permissions
 
 
 class UpdateOwnNote(BasePermission):
+    """Does not allow users to edit others' notes"""
 
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:

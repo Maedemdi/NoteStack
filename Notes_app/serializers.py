@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from django.contrib.auth import authenticate
+
 from .models import NoteStackUser, Note, Tag
 
 """Serializing data"""
@@ -19,12 +21,14 @@ class NoteSerializer(serializers.ModelSerializer):
 
 class SignUpSerializer(serializers.ModelSerializer):
     """Enables signing the user up"""
-    password = serializers.CharField(write_only=True, min_length=8)
+    password = serializers.CharField(write_only=True,
+                                     min_length=8,
+                                     style={'input_type': 'password',
+                                            'placeholder': 'Password'})
 
     class Meta:
         model = NoteStackUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'password']
-
+        fields = ('username', 'first_name', 'last_name', 'email', 'password')
 
     def create(self, validated_data):
         password = validated_data.pop("password")
@@ -35,14 +39,21 @@ class SignUpSerializer(serializers.ModelSerializer):
         return user
 
 
+class LoginSerializer(serializers.Serializer):
+    """Enables user login"""
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True,
+                                     style={'input_type': 'password',
+                                            'placeholder': 'Password'})
 
-# class NoteStackUserSeriazlizer(serializers.ModelSerializer):
-#     class Meta:
-#         model = NoteStackUser
-#         fields = '__all__'
-
-
-# class TagSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Tag
-#         fields = '__all__'
+    def validate(self, data):
+        user = authenticate(
+            username=data.get("username"),
+            password=data.get("password")
+        )
+        if not user:
+            raise serializers.ValidationError("Invalid username or password.")
+        if not user.is_active:
+            raise serializers.ValidationError("User account is disabled.")
+        data["user"] = user
+        return data
